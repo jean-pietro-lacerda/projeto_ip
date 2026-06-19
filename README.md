@@ -8,6 +8,8 @@ No jogo, você assume o papel de um monitor de Introdução à Programação exa
 
 [Integrantes do grupo e suas funções](#integrantes-do-grupo-e-suas-funções)
 
+[Notion usado para organização do projeto](#notion-usado-para-organizacao-do-projeto)
+
 [Instruções para rodar o projeto](#instruções-para-rodar-o-projeto)
 
 [Biblioteca usada](#biblioteca-usada)
@@ -29,6 +31,8 @@ No jogo, você assume o papel de um monitor de Introdução à Programação exa
 
 [**Mateus Costa**](https://github.com/Costa2208) - Função 
 
+# **Notion usado para organização do projeto**
+https://app.notion.com/p/Projeto-IP-Equipe-6-9679db32908c831385e3813c4a5f2f77
 
 ## **Instruções para rodar o projeto**
 
