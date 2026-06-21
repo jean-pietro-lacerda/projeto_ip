@@ -95,6 +95,7 @@ class Jogo:
         rect_score = texto_score.get_rect(center=(LARGURA // 2, ALTURA // 2 + 20))
         self.tela.blit(texto_score, rect_score)
 
+
 if __name__ == "__main__":
     jogo = Jogo()
     jogo.rodar()
