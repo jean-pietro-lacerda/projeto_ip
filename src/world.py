@@ -29,6 +29,25 @@ class World:
             [pygame.Rect(790, -400, 40, 120), 3]
         ]
 
+        self.construcoes = [
+            pygame.Rect(0, 0, 388, 189),
+            pygame.Rect(0, 189, 338, 176),
+            pygame.Rect(0, 365, 294, 451),
+            pygame.Rect(0, 816, 39, 105),
+            pygame.Rect(1245, 0, 136, 189),
+            pygame.Rect(1298, 289, 83, 22),
+            pygame.Rect(1245, 311, 136, 129),
+            pygame.Rect(1216, 440, 165, 198),
+            pygame.Rect(1245, 638, 136, 230),
+            pygame.Rect(1298, 868, 83, 53),
+            pygame.Rect(346, 403, 137, 214),
+            pygame.Rect(388, 0, 857, 13),
+            pygame.Rect(1053, 126, 117, 117),
+            pygame.Rect(1054, 301, 115, 115),
+            pygame.Rect(1034, 448, 155, 155),
+            pygame.Rect(1053, 677, 117, 117)
+        ]
+
         self.gotas_chuva = []
         for _ in range(100):
             x = random.randint(0, LARGURA)
@@ -121,6 +140,10 @@ class World:
                     # recompensa por limpar: escoa 60 pixels de água acumulada
                     self.altura_agua = max(0, self.altura_agua - 60)
 
+        for bloco in self.construcoes:
+            if player.rect.colliderect(bloco):
+                player.voltar_posicao()
+
     def update(self, player):
         self.gerenciar_lixo_por_tempo()
         self.gerenciar_inundacao()
@@ -151,6 +174,6 @@ class World:
             pygame.draw.rect(self.superficie_agua, COR_AGUA, retangulo_agua)
             superficie.blit(self.superficie_agua, (0, 0))
 
-        # desenha a pontuação em PRETO no topo esquerdo (X=20, Y=20)
+        # desenha a pontuação em preto no topo esquerdo (X=20, Y=20)
         texto_pontos = self.fonte.render(f"Pontos: {self.pontos}", True, COR_TEXTO)
         superficie.blit(texto_pontos, (20, 20))
