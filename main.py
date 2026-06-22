@@ -69,7 +69,7 @@ class Jogo:
         # O world.draw desenha primeiro o mapa de fundo, chuva, lixos, obstáculos e o mar de água
         self.world.draw(self.tela)
 
-        # O player desenha a bolinha dele por cima de tudo para não ser "engolido" pelo fundo
+        # O jogador desenha a bolinha dele por cima de tudo para não ser "engolido" pelo fundo
         self.player.draw(self.tela)
 
         if self.estado == 2:

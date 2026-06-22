@@ -7,10 +7,10 @@ from src.settings import (POSICOES_BUEIROS, LIXEIRA_RECT, TEMPO_GERAR_LIXO,
 class World:
     def __init__(self):
         #  pegando as imagens e colocando na altura e largura certa
-        self.mapa = pygame.image.load("assets/graphics/mapa.png")
+        self.mapa = pygame.image.load("assets/graphics/cenario/mapa.png")
         self.mapa = pygame.transform.scale(self.mapa, (LARGURA, ALTURA))
         self.imagem_lixo = pygame.image.load("assets/graphics/lixo.png")
-        self.imagem_lixo = pygame.transform.scale(self.imagem_lixo, (30, 30))
+        self.imagem_lixo = pygame.transform.scale(self.imagem_lixo, (60, 60))
 
         self.lixeira_rect = pygame.Rect(LIXEIRA_RECT)
 
@@ -30,22 +30,11 @@ class World:
         ]
 
         self.construcoes = [
-            pygame.Rect(0, 0, 388, 189),
-            pygame.Rect(0, 189, 338, 176),
-            pygame.Rect(0, 365, 294, 451),
-            pygame.Rect(0, 816, 39, 105),
-            pygame.Rect(1245, 0, 136, 189),
-            pygame.Rect(1298, 289, 83, 22),
-            pygame.Rect(1245, 311, 136, 129),
-            pygame.Rect(1216, 440, 165, 198),
-            pygame.Rect(1245, 638, 136, 230),
-            pygame.Rect(1298, 868, 83, 53),
-            pygame.Rect(346, 403, 137, 214),
-            pygame.Rect(388, 0, 857, 13),
-            pygame.Rect(1053, 126, 117, 117),
-            pygame.Rect(1054, 301, 115, 115),
-            pygame.Rect(1034, 448, 155, 155),
-            pygame.Rect(1053, 677, 117, 117)
+            pygame.Rect(0, 0, LARGURA, 30),
+
+            pygame.Rect(0, 0, 180, ALTURA),
+
+            pygame.Rect(1000, 0, 280, ALTURA)
         ]
 
         self.gotas_chuva = []
@@ -130,7 +119,7 @@ class World:
                     player.carregando_lixo = True
                     break
 
-        # soltar lixp na lixeira Apertar ESPAÇO ou E
+        # soltar lixo na lixeira Apertar ESPAÇO ou E
         if player.carregando_lixo:
             teclas = pygame.key.get_pressed()
             if player.rect.colliderect(self.lixeira_rect):
@@ -140,9 +129,14 @@ class World:
                     # recompensa por limpar: escoa 60 pixels de água acumulada
                     self.altura_agua = max(0, self.altura_agua - 60)
 
+        # faz o personagem esbarrar e parar nas construções/casas
         for bloco in self.construcoes:
             if player.rect.colliderect(bloco):
                 player.voltar_posicao()
+
+        #transforma a lixeira em parede para não andar por cima dela
+        if player.rect.colliderect(self.lixeira_rect):
+            player.voltar_posicao()
 
     def update(self, player):
         self.gerenciar_lixo_por_tempo()
