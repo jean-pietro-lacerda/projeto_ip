@@ -4,16 +4,42 @@ from src.settings import (POSICOES_BUEIROS, LIXEIRA_RECT, TEMPO_GERAR_LIXO,
                           LARGURA, ALTURA, COR_OBSTACULO, COR_TEXTO, COR_CHUVA, COR_AGUA)
 
 
+# Lista de coletáveis possíveis e seus pesos (chance relativa de aparecer)
+# "lixo" tem 70% de chance, "bota" 20%, "cracha" 10% (somando 100, mas não precisa ser exato)
+COLETAVEIS = [
+    ("lixo", 70),
+    ("bota", 20),
+    ("cracha", 10)
+]
+
+
+def gerar_coletavel():
+    """Sorteia e retorna o nome de um coletável, respeitando os pesos definidos em COLETAVEIS."""
+    nomes = [c[0] for c in COLETAVEIS]
+    pesos = [c[1] for c in COLETAVEIS]
+    return random.choices(nomes, weights=pesos)[0]
+
+
 class World:
     def __init__(self):
         #  pegando as imagens e colocando na altura e largura certa
         self.mapa = pygame.image.load("assets/graphics/mapa.png")
         self.mapa = pygame.transform.scale(self.mapa, (LARGURA, ALTURA))
-        self.imagem_lixo = pygame.image.load("assets/graphics/lixo.png")
-        self.imagem_lixo = pygame.transform.scale(self.imagem_lixo, (30, 30))
+
+        # Carrega a imagem de cada tipo de coletável e guarda em um dicionário
+        # assim fica fácil pegar a imagem certa na hora de desenhar: self.imagens_coletaveis["lixo"]
+        self.imagens_coletaveis = {
+            "lixo": pygame.image.load("assets/graphics/lixo.png"),
+            "bota": pygame.image.load("assets/graphics/bota.png"),
+            "cracha": pygame.image.load("assets/graphics/cracha.png"),
+        }
+        for nome in self.imagens_coletaveis:
+            self.imagens_coletaveis[nome] = pygame.transform.scale(self.imagens_coletaveis[nome], (30, 30))
 
         self.lixeira_rect = pygame.Rect(LIXEIRA_RECT)
 
+        # Cada item da lista agora é [rect, tipo] em vez de só o rect,
+        # pra sabermos qual imagem desenhar e qual coletável foi pego
         self.lixos_no_chao = []
         self.tempo_ultimo_lixo = pygame.time.get_ticks()
         self.pontos = 0
@@ -47,21 +73,24 @@ class World:
         if tempo_atual - self.tempo_ultimo_lixo > TEMPO_GERAR_LIXO:
             bueiro_escolhido = random.choice(POSICOES_BUEIROS)
 
-            # gera variações para o lixo espalhar pelo bueiro (meio e bordas)
+            # gera variações para o coletável espalhar pelo bueiro (meio e bordas)
             variacao_x = random.randint(-40, 40)
             variacao_y = random.randint(-20, 20)
 
             posicao_x = bueiro_escolhido[0] - 15 + variacao_x
             posicao_y = bueiro_escolhido[1] - 15 + variacao_y
 
-            novo_lixo = pygame.Rect(posicao_x, posicao_y, 30, 30)
-            # add lixo na lista pra jogar essa lista como a quantidade de lixo
-            self.lixos_no_chao.append(novo_lixo)
+            # sorteia qual tipo de coletável vai aparecer (lixo, bota ou cracha)
+            tipo_coletavel = gerar_coletavel()
+
+            novo_rect = pygame.Rect(posicao_x, posicao_y, 30, 30)
+            # add coletável na lista junto com o tipo sorteado
+            self.lixos_no_chao.append([novo_rect, tipo_coletavel])
 
             self.tempo_ultimo_lixo = tempo_atual
 
     def gerenciar_inundacao(self):
-        # quantidade de lixos atualmente no chão entupindo os canos
+        # quantidade de coletáveis atualmente no chão entupindo os canos
         quantidade_lixo = len(self.lixos_no_chao)
 
         if quantidade_lixo > 0:
@@ -105,13 +134,16 @@ class World:
 
     def checar_colisoes(self, player):
         if not player.carregando_lixo:
-            for lixo in self.lixos_no_chao[:]:
-                if player.rect.colliderect(lixo):
-                    self.lixos_no_chao.remove(lixo)
+            for item in self.lixos_no_chao[:]:
+                rect, tipo = item
+                if player.rect.colliderect(rect):
+                    self.lixos_no_chao.remove(item)
                     player.carregando_lixo = True
+                    # guarda qual tipo de coletável o player está carregando agora
+                    player.tipo_coletavel_carregado = tipo
                     break
 
-        # soltar lixp na lixeira Apertar ESPAÇO ou E
+        # soltar coletável na lixeira Apertar ESPAÇO ou E
         if player.carregando_lixo:
             teclas = pygame.key.get_pressed()
             if player.rect.colliderect(self.lixeira_rect):
@@ -136,9 +168,10 @@ class World:
         for gota in self.gotas_chuva:
             pygame.draw.line(superficie, COR_CHUVA, (gota[0], gota[1]), (gota[0], gota[1] + 12), 2)
 
-        # desenha todos os lixos ativos espalhados pelo chão
-        for lixo in self.lixos_no_chao:
-            superficie.blit(self.imagem_lixo, (lixo.x, lixo.y))
+        # desenha todos os coletáveis ativos espalhados pelo chão, usando a imagem certa pra cada tipo
+        for rect, tipo in self.lixos_no_chao:
+            imagem = self.imagens_coletaveis[tipo]
+            superficie.blit(imagem, (rect.x, rect.y))
 
         # desenha os retângulos obstáculos
         for obs in self.obstaculos:
