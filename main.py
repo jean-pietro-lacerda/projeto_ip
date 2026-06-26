@@ -10,7 +10,7 @@ class Jogo:
         pygame.init()
         # define o tamanho correto da janela (1280x720)
         self.tela = pygame.display.set_mode((LARGURA, ALTURA))
-        pygame.display.set_caption("Eco-Gincana: Limpando os Bueiros")
+        pygame.display.set_caption("Cincharca")
         self.relogio = pygame.time.Clock()
         self.rodando = True
 
@@ -19,7 +19,6 @@ class Jogo:
         # 1 = jogando
         # 2 = game over
         self.estado = 0
-        
 
         self.player = Player()
         self.world = World()
@@ -31,8 +30,12 @@ class Jogo:
 
         #tela escura semi-transparente (reaproveitado o frame)
         self.overlay = pygame.Surface((LARGURA, ALTURA))
-        self.overlay.set_alpha(160)  # 0 = invisível, 255 = opaco
+        self.overlay.set_alpha(190)  # 0 = invisível, 255 = opaco
         self.overlay.fill((0, 0, 0))
+        #controla o piscar da mensagem "Pressione ESPAÇO", para da aquele inicio de jogo mais dinâmico.
+        self.mostrar_texto = True
+        # guarda o momento em que o texto piscou pela última vez
+        self.tempo_piscar = pygame.time.get_ticks()
 
     def rodar(self):
         while self.rodando:
@@ -45,7 +48,7 @@ class Jogo:
         sys.exit()
 
     def eventos(self):
-    #percorre todos os eventos que aconteceram desde o último frame
+        #percorre todos os eventos que aconteceram desde o último frame
         for evento in pygame.event.get():
 
             #se o jogador clicar no X da janela, fecha o jogo
@@ -64,7 +67,6 @@ class Jogo:
                         self.estado = 1
 
     def update(self):
-    
 
         #menu: aqui eu congelo o jogo.
         if self.estado == 0:
@@ -85,7 +87,7 @@ class Jogo:
 
         print(f"altura_agua={self.world.altura_agua:.1f} / ALTURA={ALTURA} / inundou={self.world.verificar_inundacao()}")  # DEBUG
 
-         # checa o exato momento em que a inundação atinge o limite
+        # checa o exato momento em que a inundação atinge o limite
         if self.world.verificar_inundacao():
             self.estado = 2  # muda para game Over
 
@@ -107,7 +109,6 @@ class Jogo:
 
         pygame.display.flip()
 
-
     def desenhar_game_over(self):
         # escurece a tela
         self.tela.blit(self.overlay, (0, 0))
@@ -127,38 +128,85 @@ class Jogo:
         self.tela.blit(texto_score, rect_score)
 
     def desenhar_menu(self):
-    #utilizei o selg.world.mapa pq o world já carrega o mapa na memória. Então, não precisa carregar o mapa novamente.
-    #desenha apenas o mapa
+        #utilizei o selg.world.mapa pq o world já carrega o mapa na memória. Então, não precisa carregar o mapa novamente.
+        #desenha apenas o mapa
         self.tela.blit(self.world.mapa, (0, 0))
 
         #escurece um pouco o fundo
         self.tela.blit(self.overlay, (0, 0))
 
-        #título
+        #TÍTULO DO MENU
+        #Cria a sombra do título.
+        #A ideia é desenhar exatamente o mesmo texto, porém alguns pixels
+        #deslocado para a direita e para baixo. Isso cria um efeito de profundidade.
+        titulo_sombra = self.fonte_titulo.render(
+            "Cincharca",
+            True,
+            (0, 0, 0)
+        )
+
+        #primeiro posicionamos a sombra exatamente onde ficará o título.
+        rect_sombra = titulo_sombra.get_rect(
+            center=(LARGURA // 2, ALTURA // 2 - 90)
+        )
+
+        #depois deslocamos 3 pixels para a direita e 3 pixels para baixo.
+        #o método move_ip() altera o próprio retângulo ("in place").
+        rect_sombra.move_ip(3, 3)
+
+        #desenha a sombra.
+        self.tela.blit(titulo_sombra, rect_sombra)
+
+        #agora desenhamos o título principal exatamente na posição correta.
         titulo = self.fonte_titulo.render(
-            "Cincharca: Limpando os Bueiros",
+            "Cincharca",
             True,
             (255, 255, 255)
         )
 
         rect_titulo = titulo.get_rect(
-            center=(LARGURA // 2, ALTURA // 2 - 60)
+            center=(LARGURA // 2, ALTURA // 2 - 90)
         )
 
+        #O título branco fica por cima da sombra.
         self.tela.blit(titulo, rect_titulo)
+        #DEIXO ABAIXO COMO ESTAVA ANTES, CASO QUEIRA VOLTAR. MAS ACHO QUE FICOU MELHOR COM A SOMBRA.
+        # """#título
+        # titulo = self.fonte_titulo.render(
+        #     "Cincharca",
+        #     True,
+        #     (255, 255, 255)
+        # )
 
-        # instrução
-        texto = self.fonte_menu.render(
-            "Pressione ESPAÇO para iniciar",
-            True,
-            (255, 255, 255)
-        )
+        # rect_titulo = titulo.get_rect(
+        #     center=(LARGURA // 2, ALTURA // 2 - 90)
+        # )
 
-        rect = texto.get_rect(
-            center=(LARGURA // 2, ALTURA // 2 + 20)
-        )
+        # self.tela.blit(titulo, rect_titulo)"""
 
-        self.tela.blit(texto, rect)
+        #aqui faz o texto piscar a cada 500 milissegundos.
+        tempo_atual = pygame.time.get_ticks()
+
+        if tempo_atual - self.tempo_piscar > 500:
+            self.mostrar_texto = not self.mostrar_texto
+            self.tempo_piscar = tempo_atual
+
+        #MENSAGEM PARA INICIAR
+        # A variável self.mostrar_texto é alternada entre True e False a cada 500 ms.
+        # Assim, a mensagem aparece e desaparece, criando o clássico efeito de "piscar" utilizado em menus.
+        if self.mostrar_texto:
+            texto = self.fonte_menu.render(
+                "Pressione ESPAÇO para iniciar",
+                True,
+                (255, 255, 255)
+            )
+
+            rect = texto.get_rect(
+                center=(LARGURA // 2, ALTURA // 2 + 10)
+            )
+
+            self.tela.blit(texto, rect)
+
 
 if __name__ == "__main__":
     jogo = Jogo()
