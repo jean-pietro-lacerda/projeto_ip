@@ -15,15 +15,19 @@ class Jogo:
         self.rodando = True
 
         #criando estados
-        # 1 = jogando ; 2 = game over
-        self.estado = 1
+        # 0 = menu
+        # 1 = jogando
+        # 2 = game over
+        self.estado = 0
+        
 
         self.player = Player()
         self.world = World()
 
         # fonte usada na tela de game over
-        self.fonte_titulo = pygame.font.SysFont(None, 64)
+        self.fonte_titulo = pygame.font.SysFont(None, 54)
         self.fonte_score = pygame.font.SysFont(None, 40)
+        self.fonte_menu = pygame.font.SysFont(None, 48)
 
         #tela escura semi-transparente (reaproveitado o frame)
         self.overlay = pygame.Surface((LARGURA, ALTURA))
@@ -41,11 +45,31 @@ class Jogo:
         sys.exit()
 
     def eventos(self):
+    #percorre todos os eventos que aconteceram desde o último frame
         for evento in pygame.event.get():
+
+            #se o jogador clicar no X da janela, fecha o jogo
             if evento.type == pygame.QUIT:
                 self.rodando = False
 
+            #verifica se alguma tecla foi pressionada
+            if evento.type == pygame.KEYDOWN:
+
+                #se estivermos na tela de menu...
+                if self.estado == 0:
+
+                    #...e a tecla pressionada for ESPAÇO,
+                    #muda o estado para "jogando"
+                    if evento.key == pygame.K_SPACE:
+                        self.estado = 1
+
     def update(self):
+    
+
+        #menu: aqui eu congelo o jogo.
+        if self.estado == 0:
+            return
+
         # se já é game over, trava os comandos: não atualiza mais nada
         if self.estado == 2:
             return
@@ -67,15 +91,22 @@ class Jogo:
 
     def desenhar(self):
         # O world.draw desenha primeiro o mapa de fundo, chuva, lixos, obstáculos e o mar de água
-        self.world.draw(self.tela)
-
+        #self.world.draw(self.tela)
         # O jogador desenha a bolinha dele por cima de tudo para não ser "engolido" pelo fundo
+        #self.player.draw(self.tela)
+        if self.estado == 0:
+            self.desenhar_menu()
+            pygame.display.flip()
+            return
+
+        self.world.draw(self.tela)
         self.player.draw(self.tela)
 
         if self.estado == 2:
             self.desenhar_game_over()
 
         pygame.display.flip()
+
 
     def desenhar_game_over(self):
         # escurece a tela
@@ -94,6 +125,40 @@ class Jogo:
         )
         rect_score = texto_score.get_rect(center=(LARGURA // 2, ALTURA // 2 + 20))
         self.tela.blit(texto_score, rect_score)
+
+    def desenhar_menu(self):
+    #utilizei o selg.world.mapa pq o world já carrega o mapa na memória. Então, não precisa carregar o mapa novamente.
+    #desenha apenas o mapa
+        self.tela.blit(self.world.mapa, (0, 0))
+
+        #escurece um pouco o fundo
+        self.tela.blit(self.overlay, (0, 0))
+
+        #título
+        titulo = self.fonte_titulo.render(
+            "Cincharca: Limpando os Bueiros",
+            True,
+            (255, 255, 255)
+        )
+
+        rect_titulo = titulo.get_rect(
+            center=(LARGURA // 2, ALTURA // 2 - 60)
+        )
+
+        self.tela.blit(titulo, rect_titulo)
+
+        # instrução
+        texto = self.fonte_menu.render(
+            "Pressione ESPAÇO para iniciar",
+            True,
+            (255, 255, 255)
+        )
+
+        rect = texto.get_rect(
+            center=(LARGURA // 2, ALTURA // 2 + 20)
+        )
+
+        self.tela.blit(texto, rect)
 
 if __name__ == "__main__":
     jogo = Jogo()
