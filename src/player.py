@@ -90,7 +90,7 @@ class Player:
         """Se for a 1ª bota, aumenta a velocidade máxima."""
         if self.bota == 0:
             self.bota = 1
-            self.velocidade_maxima *= 1.3 # Deixa o jogador mais rápido!
+            self.velocidade_maxima *= 1.2 # Deixa o jogador mais rápido!
             return True 
         else:
             # Se já tem a bota, converte a nova bota em 3 lixos automaticamente
