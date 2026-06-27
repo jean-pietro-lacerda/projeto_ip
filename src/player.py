@@ -6,7 +6,7 @@ class Player:
         self.raio = 20
         # so pro jogador ficar no centro da tela
         self.rect = pygame.Rect(LARGURA // 2, ALTURA // 2, self.raio * 2, self.raio * 2)
-        self.velocidade_maxima = 9
+        self.velocidade_maxima = 6
         self.velocidade = 6
 
         # TAG False = mãos vazias | True = carregando lixo
@@ -90,7 +90,7 @@ class Player:
         """Se for a 1ª bota, aumenta a velocidade máxima."""
         if self.bota == 0:
             self.bota = 1
-            self.velocidade_maxima *= 1.5 # Deixa o jogador mais rápido!
+            self.velocidade_maxima *= 1.3 # Deixa o jogador mais rápido!
             return True 
         else:
             # Se já tem a bota, converte a nova bota em 3 lixos automaticamente
