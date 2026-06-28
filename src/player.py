@@ -96,13 +96,16 @@ class Player:
         pygame.draw.rect(superficie, (220, 220, 220), (HUD_X, HUD_Y, LARGURA_HUD, ALTURA_HUD))
         pygame.draw.rect(superficie, (100, 100, 100), (HUD_X, HUD_Y, LARGURA_HUD, ALTURA_HUD), 2)
 
-        # Configuração da ordem vertical: Lixo (topo), Bota (meio), Crachá (baixo)
+        # Lógica de exibição da Bota: 
+        # Se pegou 0 ou 1, mostra 0 (some). Se pegou 2, mostra 1. Se pegou 3, mostra 2.
+        qtd_bota_hud = self.bota - 1 if self.bota > 0 else 0
+
+        # Configuração da ordem vertical
         config_itens = [
             (self.lixo, sprite_lixo),      
-            (self.bota, sprite_bota),      
+            (qtd_bota_hud, sprite_bota),  
             (self.cracha, sprite_cracha)   
         ]
-
         posicao_y_atual = HUD_Y + ESPACAMENTO
 
         for qtd, sprite in config_itens:
@@ -125,50 +128,42 @@ class Player:
             posicao_y_atual += TAMANHO_SLOT + ESPACAMENTO
 
     # ==========================================
-    # --- MÉTODOS DO INVENTÁRIO INTEGRADOS ---
+    # --- MÉTODOS DO INVENTÁRIO ---
     # ==========================================
 
     def coletar_lixo(self):
-        """O crachá define se pega 1 ou 2 lixos por vez."""
-        if self.cracha == 1:
-            self.lixo += 2
-        else:
-            self.lixo += 1
-            
-        self.carregando_lixo = True # Atualiza a bolinha verde automaticamente
+        """Coleta o lixo normalmente (1 por vez)."""
+        self.lixo += 1
+        self.carregando_lixo = True # Apenas o lixo ativa a bolinha verde
 
     def coletar_bota(self):
-        """Se for a 1ª bota, aumenta a velocidade máxima."""
-        if self.bota == 0:
-            self.bota = 1
-            self.velocidade_maxima *= 1.2 # Deixa o jogador mais rápido!
-            return True 
+        """1ª Bota = Velocidade (invisível no HUD). 2ª em diante = Inventário + Pontos."""
+        self.bota += 1
+        if self.bota == 1:
+            self.velocidade_maxima *= 1.2 # Fica mais rápido, mas não aparece no inventário
         else:
-            # Se já tem a bota, converte a nova bota em 3 lixos automaticamente
-            self.lixo += 3
-            self.carregando_lixo = True
-            return False
+            # Entra no inventário e já dá pontos diretos (ex: +3 pontos.)
+            self.pontuacao += 3
+        
+        return True # Sempre some do mapa ao passar por cima
 
     def coletar_cracha(self):
-        """Se for o 1º crachá, libera a coleta dupla."""
-        if self.cracha == 0:
-            self.cracha = 1
-            return True
-        else:
-            # Se já tem o crachá, converte o novo em 5 lixos automaticamente
-            self.lixo += 5
-            self.carregando_lixo = True
-            return False
+        """Aumenta o multiplicador de pontuação e aparece no inventário."""
+        self.cracha += 1
+        return True # Sempre some do mapa ao passar por cima
 
     def descartar_lixo(self):
-        """Chame quando o jogador encostar na lixeira."""
+        """Descarta o lixo na lixeira."""
         if self.lixo > 0:
             self.pontuacao += self.lixo
-            self.lixo = 0 # Zera o lixo da mão do jogador
-            self.carregando_lixo = False # Tira a bolinha verde automaticamente
+            self.lixo = 0
+            self.carregando_lixo = False
             return True
         return False
-
-    def pegar_texto_hud(self):
-        """Retorna os dados no formato certinho para a tela."""
-        return f"Lixos na Mão: {self.lixo} | Bota: {self.bota}/1 | Crachá: {self.cracha}/1 | Pontos: {self.pontuacao}"
+        
+    def get_pontuacao_total(self):
+        """Calcula a pontuação real aplicando os multiplicadores dos crachás."""
+        if self.cracha > 0:
+            # Multiplica por 2 elevado à quantidade de crachás (ex: 2 crachás = x4)
+            return self.pontuacao * (2 ** self.cracha)
+        return self.pontuacao
