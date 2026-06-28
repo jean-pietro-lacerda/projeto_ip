@@ -139,6 +139,7 @@ class World:
 
     # /SISTEMA DE COLISÕES GERAIS E INTERAÇÃO/
     def checar_colisoes(self, player):
+        # 1. COLETAR ITENS NO CHÃO (Basta encostar)
         if not player.carregando_lixo:
             for item in self.lixos_no_chao[:]:
                 rect_coletavel = item[0]
@@ -146,20 +147,34 @@ class World:
 
                 if player.rect.colliderect(rect_coletavel):
                     self.lixos_no_chao.remove(item)
-                    player.carregando_lixo = True
-                    player.tipo_coletavel_carregado = tipo_coletavel
+                    
+                    # Chama a função certa de acordo com o item
+                    if tipo_coletavel == "lixo":
+                        player.coletar_lixo()
+                    elif tipo_coletavel == "bota":
+                        player.coletar_bota()
+                    elif tipo_coletavel == "cracha":
+                        player.coletar_cracha()
+                    
                     break
 
-        # soltar lixp na lixeira Apertar ESPAÇO ou E
-        if player.carregando_lixo:
-            teclas = pygame.key.get_pressed()
-            if player.rect.colliderect(self.lixeira_rect):
+        # 2. DESCARTAR LIXO NA LIXEIRA (Apertar ESPAÇO ou E)
+        # Primeiro, verificamos se ele bateu na lixeira para bloquear o movimento
+        if player.rect.colliderect(self.lixeira_rect):
+            player.voltar_posicao()
+            
+            # Depois, verificamos se ele tem lixo e apertou o botão
+            if player.carregando_lixo:
+                teclas = pygame.key.get_pressed()
                 if teclas[pygame.K_SPACE] or teclas[pygame.K_e]:
-                    player.carregando_lixo = False
-                    self.pontos += 1
-                    # recompensa por limpar: escoa 60 pixels de água acumulada
-                    self.altura_agua = max(0, self.altura_agua - 60)
+                    # Tenta jogar o lixo fora. Se der certo...
+                    if player.descartar_lixo():
+                        # Atualiza os pontos da tela para ficarem iguais aos do inventário
+                        self.pontos = player.pontuacao 
+                        # Recompensa por limpar: escoa 60 pixels de água acumulada
+                        self.altura_agua = max(0, self.altura_agua - 60)
 
+        # 3. COLISÕES COM AS CONSTRUÇÕES
         for bloco in self.construcoes:
             if player.rect.colliderect(bloco):
                 player.voltar_posicao()
