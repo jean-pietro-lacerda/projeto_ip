@@ -1,6 +1,17 @@
 import pygame
 from src.settings import LARGURA, ALTURA, COR_JOGADOR
 
+# --- CARREGAMENTO DOS SPRITES DO INVENTÁRIO ---
+try:
+    sprite_lixo   = pygame.transform.scale(pygame.image.load("saco_lixo_pixel.png"), (45, 45))
+    sprite_bota   = pygame.transform.scale(pygame.image.load("bota_amarela_pixel.png"), (45, 45))
+    sprite_cracha = pygame.transform.scale(pygame.image.load("cracha_aluno_pixel.png"), (45, 45))
+except:
+    # Fallback caso os arquivos não estejam na pasta
+    sprite_lixo = pygame.Surface((45, 45)); sprite_lixo.fill((50, 50, 50))
+    sprite_bota = pygame.Surface((45, 45)); sprite_bota.fill((139, 69, 19))
+    sprite_cracha = pygame.Surface((45, 45)); sprite_cracha.fill((200, 0, 0))
+
 class Player:
     def __init__(self):
         self.raio = 20
@@ -72,6 +83,46 @@ class Player:
         if self.carregando_lixo:
             pygame.draw.circle(superficie, (50, 255, 50), (self.rect.centerx, self.rect.top - 12), 6)
 
+    def desenhar_hud(self, superficie, fonte):
+        """Desenha o painel vertical de inventário fixo sobre o prédio esquerdo."""
+        HUD_X = 22           
+        HUD_Y = 110          
+        LARGURA_HUD = 115    
+        ALTURA_HUD = 290     
+        TAMANHO_SLOT = 64    
+        ESPACAMENTO = 16     
+
+        # Fundo do HUD e Borda externa
+        pygame.draw.rect(superficie, (220, 220, 220), (HUD_X, HUD_Y, LARGURA_HUD, ALTURA_HUD))
+        pygame.draw.rect(superficie, (100, 100, 100), (HUD_X, HUD_Y, LARGURA_HUD, ALTURA_HUD), 2)
+
+        # Configuração da ordem vertical: Lixo (topo), Bota (meio), Crachá (baixo)
+        config_itens = [
+            (self.lixo, sprite_lixo),      
+            (self.bota, sprite_bota),      
+            (self.cracha, sprite_cracha)   
+        ]
+
+        posicao_y_atual = HUD_Y + ESPACAMENTO
+
+        for qtd, sprite in config_itens:
+            x_slot = HUD_X + (LARGURA_HUD - TAMANHO_SLOT) // 2
+            rect_slot = pygame.Rect(x_slot, posicao_y_atual, TAMANHO_SLOT, TAMANHO_SLOT)
+            
+            # Desenha o quadrado do slot (sempre visível)
+            pygame.draw.rect(superficie, (100, 100, 100), rect_slot, 2) 
+
+            # Condição: O item e a quantidade só aparecem se forem coletados
+            if qtd > 0:
+                x_sprite = rect_slot.centerx - (sprite.get_width() // 2)
+                y_sprite = rect_slot.centery - (sprite.get_height() // 2)
+                superficie.blit(sprite, (x_sprite, y_sprite))
+
+                # Texto da quantidade com a cor preta padrão
+                texto_qtd = fonte.render(f"x{qtd}", True, (0, 0, 0))
+                superficie.blit(texto_qtd, (rect_slot.right - 24, rect_slot.bottom - 18))
+
+            posicao_y_atual += TAMANHO_SLOT + ESPACAMENTO
 
     # ==========================================
     # --- MÉTODOS DO INVENTÁRIO INTEGRADOS ---
