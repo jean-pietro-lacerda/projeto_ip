@@ -40,6 +40,11 @@ class World:
         self.tempo_ultimo_lixo = pygame.time.get_ticks()
         self.pontos = 0
 
+        # contadores por tipo — usados no placar final do game over
+        self.lixos_coletados = 0
+        self.botas_coletadas = 0
+        self.crachas_coletados = 0
+
         self.fonte = pygame.font.SysFont("Arial", 40, bold=True)
 
         # /CLIMA E OBSTÁCULOS/
@@ -155,8 +160,26 @@ class World:
             teclas = pygame.key.get_pressed()
             if player.rect.colliderect(self.lixeira_rect):
                 if teclas[pygame.K_SPACE] or teclas[pygame.K_e]:
+                    tipo = player.tipo_coletavel_carregado
                     player.carregando_lixo = False
-                    self.pontos += 1
+
+                    # pontuação por tipo:
+                    # lixo  = 1 ponto
+                    # bota  = 1ª vale 1, a partir da 2ª vale 3
+                    # crachá = 2 pontos fixos
+                    if tipo == "lixo":
+                        self.lixos_coletados += 1
+                        self.pontos += 1
+                    elif tipo == "bota":
+                        self.botas_coletadas += 1
+                        if self.botas_coletadas == 1:
+                            self.pontos += 1   # 1ª bota vale 1
+                        else:
+                            self.pontos += 3   # 2ª bota em diante vale 3
+                    elif tipo == "cracha":
+                        self.crachas_coletados += 1
+                        self.pontos += 2       # crachá vale 2 pontos fixos
+
                     # recompensa por limpar: escoa 60 pixels de água acumulada
                     self.altura_agua = max(0, self.altura_agua - 60)
 

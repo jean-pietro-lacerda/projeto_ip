@@ -37,6 +37,24 @@ class Jogo:
         # guarda o momento em que o texto piscou pela última vez
         self.tempo_piscar = pygame.time.get_ticks()
 
+        # letreiro de Game Over — arquivo: assets/graphics/game_over.png
+        imagem_raw = pygame.image.load("assets/graphics/tela_game_over.png").convert_alpha()
+        W_orig, H_orig = imagem_raw.get_size()
+        ESCALA = 0.50
+        img_w = int(W_orig * ESCALA)
+        img_h = int(H_orig * ESCALA)
+        self.img_game_over = pygame.transform.smoothscale(imagem_raw, (img_w, img_h))
+        self.img_x = (LARGURA - img_w) // 2
+        self.img_y = (ALTURA  - img_h) // 2
+
+        # overlay azul-escuro para o game over (separado do overlay do menu)
+        self.overlay_game_over = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+        self.overlay_game_over.fill((5, 25, 50, 200))
+
+        # rects de clique dos botoes (calculados proporcionalmente à escala 0.50)
+        self.rect_jogar = pygame.Rect(437, 408, 416, 67)
+        self.rect_sair  = pygame.Rect(540, 500, 204, 59)
+
     def rodar(self):
         while self.rodando:
             self.eventos()
@@ -65,6 +83,20 @@ class Jogo:
                     #muda o estado para "jogando"
                     if evento.key == pygame.K_SPACE:
                         self.estado = 1
+
+             # checa cliques apenas quando a tela de game over estiver ativa
+            if self.estado == 2 and evento.type == pygame.MOUSEBUTTONDOWN:
+                if self.rect_jogar.collidepoint(evento.pos):
+                    self.resetar_jogo()
+                elif self.rect_sair.collidepoint(evento.pos):
+                    self.rodando = False
+
+    def resetar_jogo(self):
+    # recria player e world do zero (água, pontos e posição voltam ao início)
+        self.player = Player()
+        self.world  = World()
+        self.estado = 1
+
 
     def update(self):
 
@@ -110,22 +142,30 @@ class Jogo:
         pygame.display.flip()
 
     def desenhar_game_over(self):
-        # escurece a tela
-        self.tela.blit(self.overlay, (0, 0))
+        # overlay azul-escuro cobre o jogo por baixo
+        self.tela.blit(self.overlay_game_over, (0, 0))
 
-        # mensagem principal
-        texto_titulo = self.fonte_titulo.render(
-            "Game Over: O CIn Inundou!", True, (255, 255, 255)
-        )
-        rect_titulo = texto_titulo.get_rect(center=(LARGURA // 2, ALTURA // 2 - 40))
-        self.tela.blit(texto_titulo, rect_titulo)
+        # letreiro (imagem centralizada, com fundo transparente)
+        self.tela.blit(self.img_game_over, (self.img_x, self.img_y))
 
-        # placar final
-        texto_score = self.fonte_score.render(
-            f"Lixos recolhidos: {self.world.pontos}", True, (255, 255, 255)
-        )
-        rect_score = texto_score.get_rect(center=(LARGURA // 2, ALTURA // 2 + 20))
-        self.tela.blit(texto_score, rect_score)
+        # placar detalhado — exibido abaixo do letreiro
+        w = self.world
+        linhas = [
+            f"Lixos coletados:   {w.lixos_coletados}",
+            f"Botas coletadas:   {w.botas_coletadas}",
+            f"Crachas coletados: {w.crachas_coletados}",
+            f"Pontuacao final:   {w.pontos}",
+        ]
+
+        # posiciona o bloco de texto um pouco acima da borda inferior
+        y_base = self.img_y + self.img_game_over.get_height() - 20
+        for i, linha in enumerate(linhas):
+            y = y_base + i * 30 + (10 if i == 3 else 0)  # espaço extra antes da pontuação
+            cor = (255, 255, 100) if i == 3 else (255, 255, 255)  # amarelo para pontuação final
+
+            texto = self.fonte_score.render(linha, True, cor)
+            rect = texto.get_rect(center=(LARGURA // 2, y))
+            self.tela.blit(texto, rect)
 
     def desenhar_menu(self):
         #utilizei o selg.world.mapa pq o world já carrega o mapa na memória. Então, não precisa carregar o mapa novamente.
