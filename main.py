@@ -37,23 +37,43 @@ class Jogo:
         # guarda o momento em que o texto piscou pela última vez
         self.tempo_piscar = pygame.time.get_ticks()
 
-        # letreiro de Game Over — arquivo: assets/graphics/game_over.png
-        imagem_raw = pygame.image.load("assets/graphics/tela_game_over.png").convert_alpha()
-        W_orig, H_orig = imagem_raw.get_size()
+        # letreiro de Game Over — arquivo: assets/graphics/letreiro_game_over.png
+        imagem_letreiro_raw = pygame.image.load("assets/graphics/tela-game-over/letreiro_game_over.png").convert_alpha()
+        LW_orig, LH_orig = imagem_letreiro_raw.get_size()
         ESCALA = 0.50
-        img_w = int(W_orig * ESCALA)
-        img_h = int(H_orig * ESCALA)
-        self.img_game_over = pygame.transform.smoothscale(imagem_raw, (img_w, img_h))
-        self.img_x = (LARGURA - img_w) // 2
-        self.img_y = (ALTURA  - img_h) // 2
+        let_w = int(LW_orig * ESCALA)
+        let_h = int(LH_orig * ESCALA)
+        self.img_letreiro = pygame.transform.smoothscale(imagem_letreiro_raw, (let_w, let_h))
+
+        # botões "jogar novamente" e "sair" lado a lado — arquivo: assets/graphics/botoes_sair_e_jgr_novamente.png
+        imagem_botoes_raw = pygame.image.load("assets/graphics/tela-game-over/botoes_sair_e_jgr_novamente.png").convert_alpha()
+        BW_orig, BH_orig = imagem_botoes_raw.get_size()
+        bot_w = int(BW_orig * ESCALA)
+        bot_h = int(BH_orig * ESCALA)
+        self.img_botoes = pygame.transform.smoothscale(imagem_botoes_raw, (bot_w, bot_h))
+
+        # espaço reservado para o placar entre o letreiro e os botões
+        ESPACO_PLACAR = 130
+
+        # bloco inteiro (letreiro + placar + botões) centralizado verticalmente na tela
+        bloco_total_h = let_h + ESPACO_PLACAR + bot_h
+        y_topo = (ALTURA - bloco_total_h) // 2
+
+        self.img_x = (LARGURA - let_w) // 2
+        self.img_y = y_topo
+
+        self.placar_y_inicio = self.img_y + let_h + 10
+
+        self.botoes_x = (LARGURA - bot_w) // 2
+        self.botoes_y = self.placar_y_inicio + ESPACO_PLACAR - 20
 
         # overlay azul-escuro para o game over (separado do overlay do menu)
         self.overlay_game_over = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
         self.overlay_game_over.fill((5, 25, 50, 200))
 
-        # rects de clique dos botoes (calculados proporcionalmente à escala 0.50)
-        self.rect_jogar = pygame.Rect(437, 408, 416, 67)
-        self.rect_sair  = pygame.Rect(540, 500, 204, 59)
+        # rects de clique dos botoes (calculados a partir da posição final dos botões na tela)
+        self.rect_jogar = pygame.Rect(341, 521, 383, 60)
+        self.rect_sair  = pygame.Rect(753, 521, 184, 60)
 
     def rodar(self):
         while self.rodando:
@@ -146,26 +166,27 @@ class Jogo:
         self.tela.blit(self.overlay_game_over, (0, 0))
 
         # letreiro (imagem centralizada, com fundo transparente)
-        self.tela.blit(self.img_game_over, (self.img_x, self.img_y))
+        self.tela.blit(self.img_letreiro, (self.img_x, self.img_y))
 
-        # placar detalhado — exibido abaixo do letreiro
+        # placar detalhado — exibido entre o letreiro e os botões
         w = self.world
         linhas = [
-            f"Lixos coletados:   {w.lixos_coletados}",
-            f"Botas coletadas:   {w.botas_coletadas}",
-            f"Crachas coletados: {w.crachas_coletados}",
-            f"Pontuacao final:   {w.pontos}",
+            f"Lixos coletados: {w.lixos_coletados}",
+            f"Botas coletadas: {w.botas_coletadas}",
+            f"Crachás coletados: {w.crachas_coletados}",
+            f"Pontuação final: {w.pontos}",
         ]
 
-        # posiciona o bloco de texto um pouco acima da borda inferior
-        y_base = self.img_y + self.img_game_over.get_height() - 20
         for i, linha in enumerate(linhas):
-            y = y_base + i * 30 + (10 if i == 3 else 0)  # espaço extra antes da pontuação
+            y = self.placar_y_inicio + i * 30 + (10 if i == 3 else 0)  # espaço extra antes da pontuação
             cor = (255, 255, 100) if i == 3 else (255, 255, 255)  # amarelo para pontuação final
 
             texto = self.fonte_score.render(linha, True, cor)
             rect = texto.get_rect(center=(LARGURA // 2, y))
             self.tela.blit(texto, rect)
+
+        # botões "jogar novamente" e "sair" lado a lado, abaixo do placar
+        self.tela.blit(self.img_botoes, (self.botoes_x, self.botoes_y))
 
     def desenhar_menu(self):
         #utilizei o selg.world.mapa pq o world já carrega o mapa na memória. Então, não precisa carregar o mapa novamente.
