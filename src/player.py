@@ -22,7 +22,7 @@ class Player:
 
         # TAG False = mãos vazias | True = carregando lixo
         self.carregando_lixo = False
-
+        self.tipo_coletavel_carregado = None
         # Guarda a posição do frame anterior para o sistema de colisão esbarrar
         self.pos_antiga_x = self.rect.x
         self.pos_antiga_y = self.rect.y
@@ -127,9 +127,7 @@ class Player:
 
             posicao_y_atual += TAMANHO_SLOT + ESPACAMENTO
 
-    # ==========================================
     # --- MÉTODOS DO INVENTÁRIO ---
-    # ==========================================
 
     def coletar_lixo(self):
         """Coleta o lixo normalmente (1 por vez)."""

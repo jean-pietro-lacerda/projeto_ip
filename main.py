@@ -153,7 +153,7 @@ class Jogo:
             pygame.display.flip()
             return
 
-        self.world.draw(self.tela)
+        self.world.draw(self.tela, self.player)
         self.player.draw(self.tela)
 
         if self.estado == 2:
@@ -174,7 +174,7 @@ class Jogo:
             f"Lixos coletados: {w.lixos_coletados}",
             f"Botas coletadas: {w.botas_coletadas}",
             f"Crachás coletados: {w.crachas_coletados}",
-            f"Pontuação final: {w.pontos}",
+            f"Pontuação final: {self.player.get_pontuacao_total()}",
         ]
 
         for i, linha in enumerate(linhas):

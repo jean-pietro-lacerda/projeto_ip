@@ -144,73 +144,61 @@ class World:
 
     # /SISTEMA DE COLISÕES GERAIS E INTERAÇÃO/
     def checar_colisoes(self, player):
-        # 1. COLETAR ITENS NO CHÃO (Basta encostar)
-        if not player.carregando_lixo:
-            for item in self.lixos_no_chao[:]:
-                rect_coletavel = item[0]
-                tipo_coletavel = item[1]
+        # COLETAR ITENS NO CHÃO
+        for item in self.lixos_no_chao[:]:
+            rect_coletavel = item[0]
+            tipo_coletavel = item[1]
 
-                if player.rect.colliderect(rect_coletavel):
+            if player.rect.colliderect(rect_coletavel):
+                deve_remover = False
+
+                if tipo_coletavel == "lixo":
+                    if not player.carregando_lixo:
+                        player.coletar_lixo()
+                        self.lixos_coletados += 1
+                        deve_remover = True
+                elif tipo_coletavel == "bota":
+                    player.coletar_bota()
+                    self.botas_coletadas += 1
+                    deve_remover = True
+                elif tipo_coletavel == "cracha":
+                    player.coletar_cracha()
+                    self.crachas_coletados += 1
+                    deve_remover = True
+
+                if deve_remover:
                     self.lixos_no_chao.remove(item)
 
-                    # Chama a função certa de acordo com o item
-                    if tipo_coletavel == "lixo":
-                        player.coletar_lixo()
-                    elif tipo_coletavel == "bota":
-                        player.coletar_bota()
-                    elif tipo_coletavel == "cracha":
-                        player.coletar_cracha()
-
-                    break
-
-        # 2. DESCARTAR LIXO NA LIXEIRA (Apertar ESPAÇO ou E)
-        # Primeiro, verificamos se ele bateu na lixeira para bloquear o movimento
+        #  DESCARTAR LIXO NA LIXEIRA (Apertar ESPAÇO ou E)
         if player.rect.colliderect(self.lixeira_rect):
             player.voltar_posicao()
 
-            # Depois, verificamos se ele tem lixo e apertou o botão
+        area_interacao = player.rect.inflate(50, 50)
+
+        # Verificamos se essa área maior está perto o suficiente da lixeira
+        if area_interacao.colliderect(self.lixeira_rect):
             if player.carregando_lixo:
                 teclas = pygame.key.get_pressed()
                 if teclas[pygame.K_SPACE] or teclas[pygame.K_e]:
-                    tipo = player.tipo_coletavel_carregado
-                    player.carregando_lixo = False
+                    if player.descartar_lixo():
+                        # recompensa por limpar: escoa 60 pixels de água acumulada
+                        self.altura_agua = max(0, self.altura_agua - 60)
 
-                    # pontuação por tipo:
-                    # lixo  = 1 ponto
-                    # bota  = 1ª vale 1, a partir da 2ª vale 3
-                    # crachá = 2 pontos fixos
-                    if tipo == "lixo":
-                        self.lixos_coletados += 1
-                        self.pontos += 1
-                    elif tipo == "bota":
-                        self.botas_coletadas += 1
-                        if self.botas_coletadas == 1:
-                            self.pontos += 1   # 1ª bota vale 1
-                        else:
-                            self.pontos += 3   # 2ª bota em diante vale 3
-                    elif tipo == "cracha":
-                        self.crachas_coletados += 1
-                        self.pontos += 2       # crachá vale 2 pontos fixos
-
-                    # recompensa por limpar: escoa 60 pixels de água acumulada
-                    self.altura_agua = max(0, self.altura_agua - 60)
-
+        # COLISÃO COM PAREDES/CONSTRUÇÕES
         for bloco in self.construcoes:
             if player.rect.colliderect(bloco):
                 player.voltar_posicao()
 
-        if player.rect.colliderect(self.lixeira_rect):
-            player.voltar_posicao()
-
     # /ATUALIZAÇÃO E DESENHO/
     def update(self, player):
+        self.pontos = player.get_pontuacao_total()
         self.gerenciar_lixo_por_tempo()
         self.gerenciar_inundacao()
         self.atualizar_obstaculos(player)
         self.atualizar_chuva()
         self.checar_colisoes(player)
 
-    def draw(self, superficie):
+    def draw(self, superficie, player):
         # desenha o mapa de fundo
         superficie.blit(self.mapa, (0, 0))
 
@@ -237,5 +225,5 @@ class World:
             superficie.blit(self.superficie_agua, (0, 0))
 
         # desenha a pontuação em PRETO no topo esquerdo (X=20, Y=20)
-        texto_pontos = self.fonte.render(f"Pontos: {self.pontos}", True, COR_TEXTO)
+        texto_pontos = self.fonte.render(f"Pontos: {player.pontuacao}", True, COR_TEXTO)
         superficie.blit(texto_pontos, (20, 20))
