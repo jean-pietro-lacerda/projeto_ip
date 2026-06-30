@@ -5,11 +5,10 @@ FPS = 60
 
 # Padrão de cor RGBA 
 
-COR_JOGADOR = (50, 150, 255)    # bola
+COR_JOGADOR = (50, 150, 255)   # bola
 COR_OBSTACULO = (255, 165, 0)  # obstaculo
-COR_TEXTO = (0, 0, 0)          #  preto pro ponto que n tava aparecendo
+COR_TEXTO = (0, 0, 0)    #  preto pro ponto que n tava aparecendo
 COR_CHUVA = (100, 130, 160)    # cor da chuva
-
 COR_AGUA = (0, 100, 200, 100)
 
 
