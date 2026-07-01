@@ -174,14 +174,14 @@ class World:
                     self.botas_coletadas += 1
                     deve_remover = True
                 elif tipo_coletavel == "cracha":
-                    print("PEGOU CRACHA")
+                
                     player.coletar_cracha()
                     self.crachas_coletados += 1
 
                     if self.som_cracha:
-                        print("TENTANDO TOCAR CRACHA")
+                        
                         canal = self.som_cracha.play()
-                        print("CANAL:", canal)
+                        
 
                     deve_remover = True
 
