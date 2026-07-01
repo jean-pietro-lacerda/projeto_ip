@@ -2,16 +2,6 @@ import pygame
 from src.settings import LARGURA, ALTURA, COR_JOGADOR
 
 # --- CARREGAMENTO DOS SPRITES DO INVENTÁRIO ---
-try:
-    sprite_lixo   = pygame.transform.scale(pygame.image.load("saco_lixo_pixel.png"), (45, 45))
-    sprite_bota   = pygame.transform.scale(pygame.image.load("bota_amarela_pixel.png"), (45, 45))
-    sprite_cracha = pygame.transform.scale(pygame.image.load("cracha_aluno_pixel.png"), (45, 45))
-except:
-    # Fallback caso os arquivos não estejam na pasta
-    sprite_lixo = pygame.Surface((45, 45)); sprite_lixo.fill((50, 50, 50))
-    sprite_bota = pygame.Surface((45, 45)); sprite_bota.fill((139, 69, 19))
-    sprite_cracha = pygame.Surface((45, 45)); sprite_cracha.fill((200, 0, 0))
-
 class Player:
     def __init__(self):
         self.raio = 20
@@ -32,6 +22,14 @@ class Player:
         self.bota = 0
         self.cracha = 0
         self.pontuacao = 0
+
+        self.img_lixo = pygame.image.load("assets/graphics/itens/lixo.png").convert_alpha()
+        self.img_bota = pygame.image.load("assets/graphics/itens/bota.png").convert_alpha()
+        self.img_cracha = pygame.image.load("assets/graphics/itens/cracha.png").convert_alpha()
+
+        self.img_lixo = pygame.transform.scale(self.img_lixo, (67, 67))
+        self.img_bota = pygame.transform.scale(self.img_bota, (45, 45))
+        self.img_cracha = pygame.transform.scale(self.img_cracha, (55, 55))
 
     def controle(self, nivel_agua):
         # salva a posição antes de aplicar o movimento do teclado
@@ -100,11 +98,11 @@ class Player:
         # Se pegou 0 ou 1, mostra 0 (some). Se pegou 2, mostra 1. Se pegou 3, mostra 2.
         qtd_bota_hud = self.bota - 1 if self.bota > 0 else 0
 
-        # Configuração da ordem vertical
+        # --- AJUSTADO AQUI: Agora usamos as imagens com self.img_ que carregamos no __init__ ---
         config_itens = [
-            (self.lixo, sprite_lixo),      
-            (qtd_bota_hud, sprite_bota),  
-            (self.cracha, sprite_cracha)   
+            (self.lixo, self.img_lixo),      
+            (qtd_bota_hud, self.img_bota),  
+            (self.cracha, self.img_cracha)   
         ]
         posicao_y_atual = HUD_Y + ESPACAMENTO
 
@@ -126,7 +124,6 @@ class Player:
                 superficie.blit(texto_qtd, (rect_slot.right - 24, rect_slot.bottom - 18))
 
             posicao_y_atual += TAMANHO_SLOT + ESPACAMENTO
-
     # --- MÉTODOS DO INVENTÁRIO ---
 
     def coletar_lixo(self):

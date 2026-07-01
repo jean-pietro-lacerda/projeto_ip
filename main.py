@@ -27,6 +27,8 @@ class Jogo:
         self.fonte_titulo = pygame.font.SysFont(None, 54)
         self.fonte_score = pygame.font.SysFont(None, 40)
         self.fonte_menu = pygame.font.SysFont(None, 48)
+        #fonte para o inventário
+        self.fonte_hud=pygame.font.SysFont(None,30)
 
         #tela escura semi-transparente (reaproveitado o frame)
         self.overlay = pygame.Surface((LARGURA, ALTURA))
@@ -155,6 +157,8 @@ class Jogo:
 
         self.world.draw(self.tela, self.player)
         self.player.draw(self.tela)
+        #desenha o inventario
+        self.player.desenhar_hud(self.tela,self.fonte_hud)
 
         if self.estado == 2:
             self.desenhar_game_over()
