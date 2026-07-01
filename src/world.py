@@ -55,6 +55,12 @@ class World:
             [pygame.Rect(670, -200, 40, 120), 5],
             [pygame.Rect(790, -400, 40, 120), 3]
         ]
+        self.img_pneu = pygame.image.load("assets/graphics/obstaculos/pneu 1.png").convert_alpha()
+        self.img_barril = pygame.image.load("assets/graphics/obstaculos/barril 1.png").convert_alpha()
+
+
+        self.img_pneu = self.redimensionar_proporcional(self.img_pneu, 0.14)
+        self.img_barril = self.redimensionar_proporcional(self.img_barril, 0.16)
 
         self.gotas_chuva = []
         for _ in range(100):
@@ -70,6 +76,12 @@ class World:
         self.superficie_agua = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
 
     # /ITENS COLETÁVEIS/
+    ### MANTER PROPORCAO DOS OBSTACULOS 
+    def redimensionar_proporcional(self, img, escala):
+        largura = int(img.get_width() * escala)
+        altura = int(img.get_height() * escala)
+        return pygame.transform.smoothscale(img, (largura, altura))
+    
     def gerar_coletavel(self):
         nomes = [c[0] for c in self.coletaveis]
         pesos = [c[1] for c in self.coletaveis]
@@ -220,9 +232,14 @@ class World:
             imagem = self.imagens_coletaveis[tipo_coletavel]
             superficie.blit(imagem, (rect_coletavel.x, rect_coletavel.y))
 
-        # desenha os retângulos obstáculos
-        for obs in self.obstaculos:
-            pygame.draw.rect(superficie, COR_OBSTACULO, obs[0])
+        # desenha os obstáculos com imagem
+        for i, obs in enumerate(self.obstaculos):
+            rect = obs[0]
+
+            if i % 2 == 0:
+                superficie.blit(self.img_pneu, rect.topleft)
+            else:
+                superficie.blit(self.img_barril, rect.topleft)
 
         # desenha o mar de água azul transparente se houver inundação
         if self.altura_agua > 0:
