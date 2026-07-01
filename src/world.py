@@ -3,9 +3,9 @@ import random
 from src.settings import (POSICOES_BUEIROS, LIXEIRA_RECT, TEMPO_GERAR_LIXO,
                           LARGURA, ALTURA, COR_OBSTACULO, COR_TEXTO, COR_CHUVA, COR_AGUA)
 
-
 class World:
-    def __init__(self):
+    def __init__(self, som_cracha=None):
+        self.som_cracha = som_cracha
         # /CENÁRIO E MAPA/
         #  pegando as imagens e colocando na altura e largura certa
         self.mapa = pygame.image.load("assets/graphics/cenario/mapa.png")
@@ -162,8 +162,15 @@ class World:
                     self.botas_coletadas += 1
                     deve_remover = True
                 elif tipo_coletavel == "cracha":
+                    print("PEGOU CRACHA")
                     player.coletar_cracha()
                     self.crachas_coletados += 1
+
+                    if self.som_cracha:
+                        print("TENTANDO TOCAR CRACHA")
+                        canal = self.som_cracha.play()
+                        print("CANAL:", canal)
+
                     deve_remover = True
 
                 if deve_remover:
