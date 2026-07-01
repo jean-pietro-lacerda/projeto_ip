@@ -156,9 +156,15 @@ class Jogo:
 
         # pede ao mundo a linha Y de onde a água se encontra no momento
         nivel_agua = self.world.obter_nivel_agua_y()
+        # Juntamos todas as barreiras físicas em uma lista temporária
+        todas_barreiras = []
+        todas_barreiras.extend(self.world.construcoes)   
+        todas_barreiras.append(self.world.lixeira_rect)  
+        for obs in self.world.obstaculos:
+            todas_barreiras.append(obs[0])               
 
-        # atualiza o jogador passando a água para ele regular sua velocidade
-        self.player.update(nivel_agua)
+        # atualiza o jogador passando a água e a lista com todas as barreiras juntas
+        self.player.update(nivel_agua, todas_barreiras)
 
         # atualiza o mundo (bueiros, lixos, obstáculos e chuva)
         self.world.update(self.player)

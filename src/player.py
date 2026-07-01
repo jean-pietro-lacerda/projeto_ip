@@ -23,6 +23,7 @@ class Player:
         self.cracha = 0
         self.pontuacao = 0
 
+        #sprites dos itens coletaveis
         self.img_lixo = pygame.image.load("assets/graphics/itens/lixo.png").convert_alpha()
         self.img_bota = pygame.image.load("assets/graphics/itens/bota.png").convert_alpha()
         self.img_cracha = pygame.image.load("assets/graphics/itens/cracha.png").convert_alpha()
@@ -31,36 +32,53 @@ class Player:
         self.img_bota = pygame.transform.scale(self.img_bota, (45, 45))
         self.img_cracha = pygame.transform.scale(self.img_cracha, (55, 55))
 
-    def controle(self, nivel_agua):
-        # salva a posição antes de aplicar o movimento do teclado
-        self.pos_antiga_x = self.rect.x
-        self.pos_antiga_y = self.rect.y
-
-        # se a água subir além da posição Y atual do jogador, ele reduz a velocidade proporcionalmente
+    def controle(self, nivel_agua, blocos_colisao):
+        # Lógica da água (mantemos igual)
         if self.rect.bottom > nivel_agua:
-            # Quanto mais fundo mais lento
             profundidade = self.rect.bottom - nivel_agua
-            # a menor velocidade possivel é dois pra não tarvar totalemnte o personagemm
             self.velocidade = max(2, self.velocidade_maxima - (profundidade / 100))
         else:
             self.velocidade = self.velocidade_maxima
 
         teclas = pygame.key.get_pressed()
 
-        # movimentação baica ou wasd ou setas
+        # Movimento e colisão no eixo X
+        dx = 0
         if teclas[pygame.K_LEFT] or teclas[pygame.K_a]:
-            self.rect.x -= self.velocidade
+            dx = -self.velocidade
         if teclas[pygame.K_RIGHT] or teclas[pygame.K_d]:
-            self.rect.x += self.velocidade
-        if teclas[pygame.K_UP] or teclas[pygame.K_w]:
-            self.rect.y -= self.velocidade
-        if teclas[pygame.K_DOWN] or teclas[pygame.K_s]:
-            self.rect.y += self.velocidade
+            dx = self.velocidade
+            
+        self.rect.x += dx
+        
+        # Testa colisão horizontal com a lista de blocos
+        for bloco in blocos_colisao:
+            if self.rect.colliderect(bloco):
+                # Se estava indo pra direita, gruda no lado esquerdo do bloco
+                if dx > 0: 
+                    self.rect.right = bloco.left
+                # Se estava indo pra esquerda, gruda no lado direito do bloco
+                elif dx < 0: 
+                    self.rect.left = bloco.right
 
-    def voltar_posicao(self):
-        # colidiu volta o movimento e para ele
-        self.rect.x = self.pos_antiga_x
-        self.rect.y = self.pos_antiga_y
+        # Movimento e colisao no eixo Y
+        dy = 0
+        if teclas[pygame.K_UP] or teclas[pygame.K_w]:
+            dy = -self.velocidade
+        if teclas[pygame.K_DOWN] or teclas[pygame.K_s]:
+            dy = self.velocidade
+            
+        self.rect.y += dy
+        
+        # Testa colisão vertical com a lista de blocos
+        for bloco in blocos_colisao:
+            if self.rect.colliderect(bloco):
+                # Se estava indo pra baixo, gruda no topo do bloco
+                if dy > 0: 
+                    self.rect.bottom = bloco.top
+                # Se estava indo pra cima, gruda na base do bloco
+                elif dy < 0: 
+                    self.rect.top = bloco.bottom
 
     # somente pro jogador n sair da tela
     def limitar_tela(self):
@@ -69,8 +87,8 @@ class Player:
         if self.rect.top < 0: self.rect.top = 0
         if self.rect.bottom > ALTURA: self.rect.bottom = ALTURA
 
-    def update(self, nivel_agua):
-        self.controle(nivel_agua)
+    def update(self, nivel_agua,blocos_colisao):
+        self.controle(nivel_agua,blocos_colisao)
         self.limitar_tela()
 
     def draw(self, superficie):
