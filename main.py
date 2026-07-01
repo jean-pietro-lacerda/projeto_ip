@@ -1,13 +1,29 @@
+import os
 import pygame
 import sys
 from src.settings import LARGURA, ALTURA, FPS
 from src.player import Player
 from src.world import World
-
-
 class Jogo:
     def __init__(self):
         pygame.init()
+        ## SONS DO JOGO 
+        pygame.mixer.init()
+
+        self.caminho_audio = os.path.join("assets", "audio")
+
+        self.musica_normal = os.path.join(self.caminho_audio, "fundo do jogo normal.mp3")
+        self.som_derrota_arquivo = os.path.join(self.caminho_audio, "derrota.wav")
+        self.som_cracha_arquivo = os.path.join(self.caminho_audio, "pegou-o-cracha-som-.wav")
+
+        self.som_derrota = pygame.mixer.Sound(self.som_derrota_arquivo)
+        self.som_cracha = pygame.mixer.Sound(self.som_cracha_arquivo)
+        self.som_cracha.set_volume(0.8)
+
+
+        self.som_derrota.set_volume(0.8)
+        self.som_cracha.set_volume(0.8)
+
         # define o tamanho correto da janela (1280x720)
         self.tela = pygame.display.set_mode((LARGURA, ALTURA))
         pygame.display.set_caption("Cincharca")
@@ -21,7 +37,7 @@ class Jogo:
         self.estado = 0
 
         self.player = Player()
-        self.world = World()
+        self.world = World(self.som_cracha)
 
         # fonte usada na tela de game over
         self.fonte_titulo = pygame.font.SysFont(None, 54)
@@ -103,6 +119,9 @@ class Jogo:
                     #muda o estado para "jogando"
                     if evento.key == pygame.K_SPACE:
                         self.estado = 1
+                        pygame.mixer.music.load(self.musica_normal)
+                        pygame.mixer.music.set_volume(0.35)
+                        pygame.mixer.music.play(-1)
 
              # checa cliques apenas quando a tela de game over estiver ativa
             if self.estado == 2 and evento.type == pygame.MOUSEBUTTONDOWN:
@@ -112,11 +131,16 @@ class Jogo:
                     self.rodando = False
 
     def resetar_jogo(self):
-    # recria player e world do zero (água, pontos e posição voltam ao início)
+        self.som_derrota.stop()
+        pygame.mixer.music.stop()
+
         self.player = Player()
-        self.world  = World()
+        self.world = World(self.som_cracha)
         self.estado = 1
 
+        pygame.mixer.music.load(self.musica_normal)
+        pygame.mixer.music.set_volume(0.35)
+        pygame.mixer.music.play(-1)
 
     def update(self):
 
@@ -141,7 +165,10 @@ class Jogo:
 
         # checa o exato momento em que a inundação atinge o limite
         if self.world.verificar_inundacao():
-            self.estado = 2  # muda para game Over
+            pygame.mixer.music.stop()
+            self.som_derrota.stop()
+            self.som_derrota.play()
+            self.estado = 2
 
     def desenhar(self):
         # O world.draw desenha primeiro o mapa de fundo, chuva, lixos, obstáculos e o mar de água
