@@ -51,9 +51,9 @@ class World:
         # Configuração dos Obstáculos Móveis (Retângulos Laranja)
         # [pygame.Rect(x, y, largura, altura), velocidade_y]
         self.obstaculos = [
-            [pygame.Rect(550, 0, 40, 120), 4],
-            [pygame.Rect(670, -200, 40, 120), 5],
-            [pygame.Rect(790, -400, 40, 120), 3]
+            [pygame.Rect(550, 0, 67, 67), 4],
+            [pygame.Rect(670, -200, 67, 67), 5],
+            [pygame.Rect(790, -400, 67, 67), 3]
         ]
         self.img_pneu = pygame.image.load("assets/graphics/obstaculos/pneu 1.png").convert_alpha()
         self.img_barril = pygame.image.load("assets/graphics/obstaculos/barril 1.png").convert_alpha()
