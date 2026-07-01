@@ -124,14 +124,16 @@ class World:
             velocidade = obs[1]
             rect.y += velocidade
 
+            if rect.colliderect(player.rect):
+                player.rect.y += velocidade
             #  obstáculo passar completamente do limite de baixo, ele volta ao topo
             if rect.top > ALTURA:
                 rect.y = -rect.height
                 obs[1] = random.randint(3, 6)  # Sorteia uma nova velocidade
 
             # fisica de colisão
-            if player.rect.colliderect(rect):
-                player.voltar_posicao()
+            #if player.rect.colliderect(rect):
+                #player.voltar_posicao()
 
     # /CHUVA/
     def atualizar_chuva(self):
@@ -170,8 +172,8 @@ class World:
                     self.lixos_no_chao.remove(item)
 
         #  DESCARTAR LIXO NA LIXEIRA (Apertar ESPAÇO ou E)
-        if player.rect.colliderect(self.lixeira_rect):
-            player.voltar_posicao()
+        #if player.rect.colliderect(self.lixeira_rect):
+            #player.voltar_posicao()
 
         area_interacao = player.rect.inflate(50, 50)
 
@@ -185,9 +187,9 @@ class World:
                         self.altura_agua = max(0, self.altura_agua - 60)
 
         # COLISÃO COM PAREDES/CONSTRUÇÕES
-        for bloco in self.construcoes:
-            if player.rect.colliderect(bloco):
-                player.voltar_posicao()
+        #for bloco in self.construcoes:
+            #if player.rect.colliderect(bloco):
+                #player.voltar_posicao()
 
     # /ATUALIZAÇÃO E DESENHO/
     def update(self, player):
