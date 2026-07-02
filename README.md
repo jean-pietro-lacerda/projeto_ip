@@ -15,8 +15,8 @@ Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado
 | <img src="https://github.com/victor-tenorio.png" width="60px;"> | **Victor Tenório de Lima** | Código e pixel art do Menu principal. | [@victor-tenorio](https://github.com/victor-tenorio) |
 
 ## 👤Orientadores
-- **Prof. Ricardo Massa Ferreira Lima**](https://sigaa.ufpe.br/sigaa/public/docente/portal.jsf?siape=2227477) 
-- **Prof. Marcio Lopes Cornelio**](https://sigaa.ufpe.br/sigaa/public/docente/portal.jsf?siape=1742011) 
+- [**Prof. Ricardo Massa Ferreira Lima**](https://sigaa.ufpe.br/sigaa/public/docente/portal.jsf?siape=2227477) 
+- [**Prof. Marcio Lopes Cornelio**](https://sigaa.ufpe.br/sigaa/public/docente/portal.jsf?siape=1742011) 
 
 ## **Instruções para rodar o projeto**
 
