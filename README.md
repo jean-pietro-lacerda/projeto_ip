@@ -1,10 +1,14 @@
 # ☔💦CɪɴCʜᴀʀᴄᴀ!💦☔
 ### Relatório do Projeto Final - Introdução à Programação (2026.1) - Centro de Informática (CIn), Universidade Federal de Pernambuco (UFPE) 
 
-
 Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado sob os conceitos de Programação Orientada a Objetos (POO), utilizando classes para gerenciar o jogador, os lixos e o de fluxo da água.
 
-###Equipe
+### 👥 Equipe e divisão de tarefas
+
+| Foto | Integrante | Função Principal no Projeto | GitHub |
+| :---: | :--- | :--- | :---: |
+| <img src="https://github.com/jean-pietro-lacerda.png" width="60px;"> | **Jean-Piêtro Lacerda de Lima Santos** | Estrutura básica do jogo, testagem e resolução de bugs. | [@jean-pietro-lacerda](https://github.com/jean-pietro-lacerda) |
+
 ## **Índice**
 
 [Integrantes do grupo e suas funções](#integrantes-do-grupo-e-suas-funções)
