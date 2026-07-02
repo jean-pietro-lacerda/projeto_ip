@@ -33,6 +33,10 @@ Você está saindo do CIn em um dia chuvoso de aula e se depara com um cenário 
 - Sobreviver o máximo de tempo possível
 - Coletar itens especiais para melhorar seu desempenho
 
+### 👾 Personagens:
+| Foto | Nome |
+| :---: | :--- |
+| <img src="https://drive.google.com/file/d/1V2WVe2T5uni3IzOFHmcDd5b6HDae8cfq/view" width="60px;"> | **Azevedo** |
 ## **Instruções para rodar o projeto**
 
 Antes de começar, você precisa ter o **Python** instalado no seu computador. Após isso, siga os passos abaixo:
