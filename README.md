@@ -5,8 +5,6 @@
 Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado sob os conceitos de Programação Orientada a Objetos (POO), utilizando classes para gerenciar o jogador, os lixos e o de fluxo da água.
 
 ###Equipe
-[![Jean-Piêtro Lacerda de Lima Santos](https://github.com/jean-pietro-lacerda.png)](https://github.com/jean-pietro-lacerda)
-
 ## **Índice**
 
 [Integrantes do grupo e suas funções](#integrantes-do-grupo-e-suas-funções)
