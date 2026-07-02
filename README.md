@@ -3,7 +3,7 @@
 
 Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado sob os conceitos de Programação Orientada a Objetos (POO), utilizando classes para gerenciar o jogador, os lixos e o de fluxo da água.
 
-### 👥 Equipe e divisão de tarefas
+## 👥 Equipe e divisão de tarefas
 
 | Foto | Integrante | Função Principal no Projeto | GitHub |
 | :---: | :--- | :--- | :---: |
@@ -27,19 +27,6 @@ Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado
 [Organização do código](#organização-do-código)
 
 [Galeria de fotos](#galeria-de-fotos)
-
-
-## **Integrantes do grupo e suas funções**
-
-[**Samara Luiza**](https://github.com/slso2) - Função 
-
-[**Jean Pietro**](https://github.com/jean-pietro-lacerda) - Função 
-
-[**Maria Gabriela**](https://github.com/Maria-Firmino) - Função 
-
-[**Pedro Amaral**](https://github.com/peba-97) - Função 
-
-[**Mateus Costa**](https://github.com/Costa2208) - Função 
 
 # **Notion usado para organização do projeto**
 https://app.notion.com/p/Projeto-IP-Equipe-6-9679db32908c831385e3813c4a5f2f77
