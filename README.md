@@ -4,7 +4,8 @@
 
 Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado sob os conceitos de Programação Orientada a Objetos (POO), utilizando classes para gerenciar o jogador, os lixos e o de fluxo da água.
 
-No jogo, você assume o papel de um monitor de Introdução à Programação exausto que, ao tentar sair da CIn, se depara com as grades de escoamento totalmente entupidas. Sua missão é correr contra o relógio para coletar o lixo e desentupir os bueiros antes que o campus inteiro fique submerso e as aulas sejam canceladas!
+###Equipe
+[![Jean-Piêtro Lacerda de Lima Santos](https://github.com/jean-pietro-lacerda.png)](https://github.com/jean-pietro-lacerda)
 
 ## **Índice**
 
