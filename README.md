@@ -1,4 +1,4 @@
-# ☔💦**CɪɴCʜᴀʀᴄᴀ!**💦☔
+# ☔💦** CɪɴCʜᴀʀᴄᴀ! **💦☔
 ## Relatório do Projeto Final - Introdução à Programação (2026.1) - Centro de Informática (CIn), Universidade Federal de Pernambuco (UFPE) 
 
 
