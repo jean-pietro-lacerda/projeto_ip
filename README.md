@@ -37,6 +37,10 @@ Você está saindo do CIn em um dia chuvoso de aula e se depara com um cenário 
 | Sprite | Nome |
 | :---: | :--- |
 
+### ⛈️ Obstáculos
+| Obstáculo | Nome |
+| :---: | :--- |
+
 ## **Instruções para rodar o projeto**
 
 Antes de começar, você precisa ter o **Python** instalado no seu computador. Após isso, siga os passos abaixo:
