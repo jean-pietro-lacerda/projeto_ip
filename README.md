@@ -1,5 +1,5 @@
-#☔💦**CɪɴCʜᴀʀᴄᴀ!**💦☔
-##Relatório do Projeto Final - Introdução à Programação (2026.1) - Centro de Informática (CIn), Universidade Federal de Pernambuco (UFPE) 
+# ☔💦**CɪɴCʜᴀʀᴄᴀ!**💦☔
+## Relatório do Projeto Final - Introdução à Programação (2026.1) - Centro de Informática (CIn), Universidade Federal de Pernambuco (UFPE) 
 
 
 Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado sob os conceitos de Programação Orientada a Objetos (POO), utilizando classes para gerenciar o jogador, os lixos e o de fluxo da água.
