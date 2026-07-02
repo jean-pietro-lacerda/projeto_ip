@@ -8,6 +8,7 @@ Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado
 | Foto | Integrante | Função Principal no Projeto | GitHub |
 | :---: | :--- | :--- | :---: |
 | <img src="https://github.com/jean-pietro-lacerda.png" width="60px;"> | **Jean-Piêtro Lacerda de Lima Santos** | Estrutura básica do jogo, testagem e resolução de bugs. | [@jean-pietro-lacerda](https://github.com/jean-pietro-lacerda) |
+| <img src="https://github.com/slso2.png" width="60px;"> | **Samara Luiza da Silva Oliveira** | Tela de Game Over. | [@slso2](https://github.com/slso2) |
 
 ## **Índice**
 
