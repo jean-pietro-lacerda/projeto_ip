@@ -14,23 +14,6 @@ Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado
 | <img src="https://github.com/peba-97.png" width="60px;"> | **Pedro Ernesto Baracho Amaral** | Código dos Sprites, implementação dos áudios. | [@peba-97](https://github.com/peba-97) |
 | <img src="https://github.com/victor-tenorio.png" width="60px;"> | **Victor Tenório de Lima** | Código e pixel art do Menu principal. | [@victor-tenorio](https://github.com/victor-tenorio) |
 
-## **Índice**
-
-[Integrantes do grupo e suas funções](#integrantes-do-grupo-e-suas-funções)
-
-[Notion usado para organização do projeto](#notion-usado-para-organizacao-do-projeto)
-
-[Instruções para rodar o projeto](#instruções-para-rodar-o-projeto)
-
-[Biblioteca usada](#biblioteca-usada)
-
-[Organização do código](#organização-do-código)
-
-[Galeria de fotos](#galeria-de-fotos)
-
-# **Notion usado para organização do projeto**
-https://app.notion.com/p/Projeto-IP-Equipe-6-9679db32908c831385e3813c4a5f2f77
-
 ## **Instruções para rodar o projeto**
 
 Antes de começar, você precisa ter o **Python** instalado no seu computador. Após isso, siga os passos abaixo:
@@ -39,12 +22,4 @@ Antes de começar, você precisa ter o **Python** instalado no seu computador. A
 2. Extraia o arquivo.zip
 3. Abra a pasta projeto_ip em seu editor
 4. Execute o arquivo main.py
-   
-
-## **Biblioteca usada**
-
-
-## **Organização do código**
-
-
 ## **Galeria de fotos**
