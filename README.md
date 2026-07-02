@@ -14,6 +14,13 @@ Este projeto consiste em um jogo interativo desenvolvido em Python e estruturado
 | <img src="https://github.com/peba-97.png" width="60px;"> | **Pedro Ernesto Baracho Amaral** | Código dos Sprites, implementação dos áudios. | [@peba-97](https://github.com/peba-97) |
 | <img src="https://github.com/victor-tenorio.png" width="60px;"> | **Victor Tenório de Lima** | Código e pixel art do Menu principal. | [@victor-tenorio](https://github.com/victor-tenorio) |
 
+## 👤Orientadores
+
+| 👨‍🏫 Professor |
+| :--- |
+| [**Prof. Ricardo Massa Ferreira Lima**](https://sigaa.ufpe.br/sigaa/public/docente/portal.jsf?siape=2227477) |
+| [**Prof. Marcio Lopes Cornelio**](https://sigaa.ufpe.br/sigaa/public/docente/portal.jsf?siape=1742011) |
+
 ## **Instruções para rodar o projeto**
 
 Antes de começar, você precisa ter o **Python** instalado no seu computador. Após isso, siga os passos abaixo:
